@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
 const HttpError = require('../models/http-error')
-
 const User = require("../models/users.model");
 const { ReasonPhrases, StatusCodes } = require("http-status-codes")
 
@@ -25,12 +23,12 @@ const signUp = async (req, res, next) => {
         email,
         password,
         cats,
-    })
+    });
 
     try{
         await createdUser.save();
     }catch(err){
-        return next(new HttpError(err, 500))
+        return next(new HttpError("Signing up failed, please try again", 500))
     }
 
     res.status(StatusCodes.CREATED).json({
@@ -52,10 +50,10 @@ const login = async (req, res, next) => {
     }
 
     if (!existingUser || existingUser.password !== password){
-        return next(new HttpError("Invalid credentials", 500))
+        return next(new HttpError("Invalid credentials", 401))
     }
 
-    res.json({message: "Logged in"});
+    res.json({message: "Logged in!"});
 
 }
 

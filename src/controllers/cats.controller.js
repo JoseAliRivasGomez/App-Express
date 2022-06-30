@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
 const HttpError = require('../models/http-error')
-
 const Cat = require("../models/cats.model");
 const { ReasonPhrases, StatusCodes } = require("http-status-codes")
 
@@ -31,8 +29,8 @@ const getCats = async (req, res, next) => { //find all cats
     }
     res.status(StatusCodes.OK).json({
         message: ReasonPhrases.OK,
-        data: cats
-    })
+        data: cats,
+    });
 }
 
 const getCat = async (req, res, next) => { //find a cat by id
@@ -43,18 +41,18 @@ const getCat = async (req, res, next) => { //find a cat by id
     try{
         cat = await Cat.findById(idParam).exec();
     }catch(err){
-        return next(new HttpError(err, 400))
+        return next(new HttpError("Not found", 400))
     }
 
     if(cat){
         res.status(StatusCodes.OK).json({
             message: ReasonPhrases.OK,
             data: cat.toObject({getters: true}),
-        })
+        });
     }else{
         res.status(StatusCodes.NOT_FOUND).json({
             message: ReasonPhrases.NOT_FOUND
-        })
+        });
     }
 
 }
@@ -66,29 +64,26 @@ const updateCat = async (req, res, next) => { //update a cat by id
 
     let cat;
     try{
-        cat = await Cat.findById(idParam).exec();
+        cat = await Cat.findByIdAndUpdate(
+            idParam,
+            { name, color },
+            {
+              new: true,
+            }
+          ).exec();
     }catch(err){
         return next(new HttpError(err, 400))
     }
 
     if (cat){
-        cat.name = name;
-        cat.color = color;
-
-        try{
-            cat = await cat.save();
-        }catch(err){
-            return next(new HttpError(err, 404))
-        }
-        
         res.status(StatusCodes.OK).json({
             message: ReasonPhrases.OK,
             data: cat.toObject({getters: true}),
-        })
+        });
     }else{
         res.status(StatusCodes.NOT_FOUND).json({
             message: ReasonPhrases.NOT_FOUND
-        })
+        });
     }
 }
 
@@ -100,19 +95,19 @@ const deleteCat = async (req, res, next) => { //delete a cat by id
     try{
         cat = await Cat.findById(idParam).exec();
     }catch(err){
-        return next(new HttpError(err, 400))
+        return next(new HttpError("Not found", 400))
     }
 
     if (cat){
         await cat.remove();
         res.status(StatusCodes.OK).json({
             message: ReasonPhrases.OK,
-            data: cat.toObject({getters: true}),
-        })
+            data: "Deleted!!",
+        });
     }else{
         res.status(StatusCodes.NOT_FOUND).json({
             message: ReasonPhrases.NOT_FOUND
-        })
+        });
     }
 }
 

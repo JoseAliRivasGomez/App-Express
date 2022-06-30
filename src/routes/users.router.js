@@ -1,6 +1,5 @@
 //npm i http-status-codes
 const express = require("express")
-const { ReasonPhrases, StatusCodes } = require("http-status-codes")
 
 const router = express.Router();
 

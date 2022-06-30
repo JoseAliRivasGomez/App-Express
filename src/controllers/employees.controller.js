@@ -1,6 +1,8 @@
 
 const Employee = require("../models/employees.model");
 
+//OLD VERSION, MEJORABLE CON HTTP-ERROR Y STATUS CODES
+
 const addEmployee = async (req, res) => {//add an employee
     const addedEmployee = new Employee({
         first_name: req.body.first_name, 
@@ -18,7 +20,7 @@ const getEmployees = async (req, res) => { //find all employees
     res.json(employees);
 }
 
-const addTagToEmployee = async (req, res) => { //add a tag to an employee
+const addTagToEmployee = async (req, res) => { //add a tag to an employee--------------------------------------------------------
     const tagParam = req.params.tag;
     const idParam = req.params.id;
 
@@ -26,7 +28,7 @@ const addTagToEmployee = async (req, res) => { //add a tag to an employee
     res.json(result);
 }
 
-const getEmployeesByTag = async (req, res) => { //find employees by tag
+const getEmployeesByTag = async (req, res) => { //find employees by tag---------------------------------------------------------
 
     const tagParam = req.params.tag;
 
